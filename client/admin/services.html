@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Services — Admin Panel Binary Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <style>
+        body {
+            background: var(--bg-primary);
+        }
+
+        .admin-layout { display: block;
+            
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 260px;
+            
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--grad-primary);
+            border-radius: 10px;
+            
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .admin-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 8px 10px;
+            margin-top: 8px;
+        }
+
+        .sidebar-link {
+            
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            margin-bottom: 2px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-glow);
+            color: var(--primary);
+        }
+
+        .sidebar-link i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .admin-main {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        tbody tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        td {
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .modal-header {
+            
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><img src="../images/logo.png" alt="Binary Craft Logo" style="height: 36px; margin-right: 12px;" /><div><div style="font-weight:800;font-size:15px;color:var(--text-white)">Binary Craft</div><span class="admin-badge">ADMIN</span></div></a></div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Dashboard</div>
+                <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <div class="sidebar-section">Management</div>
+                <a href="users.html" class="sidebar-link"><i class="fas fa-users"></i> Users</a>
+                <a href="orders.html" class="sidebar-link"><i class="fas fa-shopping-bag"></i> Orders</a>
+                <a href="products.html" class="sidebar-link"><i class="fas fa-box"></i> Products</a>
+                <a href="services.html" class="sidebar-link active"><i class="fas fa-cogs"></i> Services</a>
+                <a href="messages.html" class="sidebar-link"><i class="fas fa-envelope"></i> Messages</a>
+                <div class="sidebar-section">Website</div>
+                <a href="../index.html" class="sidebar-link"><i class="fas fa-globe"></i> View Website</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-header">
+                <div>
+                    <h1>🛠️ Manage Services</h1>
+                    <p style="color:var(--text-muted);font-size:14px">Create, update, and delete IT services</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Add Service</button>
+            </div>
+
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Category</th>
+                            <th>Starting Price</th>
+                            <th>Delivery Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="services-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align:center;padding:40px">
+                                <div class="spinner"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="service-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Service</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="service-form">
+                <input type="hidden" id="srv-id" />
+                <div class="form-group"><label class="form-label">Service Title</label><input type="text"
+                        class="form-input" id="srv-title" required /></div>
+                <div class="form-group"><label class="form-label">Description</label><textarea class="form-input"
+                        id="srv-desc" rows="3" required></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Starting Price ($)</label><input type="number"
+                            class="form-input" id="srv-price" required /></div>
+                    <div class="form-group"><label class="form-label">Category</label>
+                        <select class="form-input" id="srv-cat" required>
+                            <option value="web">Web Development</option>
+                            <option value="mobile">Mobile Apps</option>
+                            <option value="cloud">Cloud & Hosting</option>
+                            <option value="security">Cybersecurity</option>
+                            <option value="ai">AI & ML</option>
+                            <option value="consult">Consultancy</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Icon / Emoji</label><input type="text"
+                            class="form-input" id="srv-icon" placeholder="&#xf0ac;" class="form-input fas" /></div>
+                    <div class="form-group"><label class="form-label">Est. Delivery Time</label><input type="text"
+                            class="form-input" id="srv-delivery" placeholder="e.g. 7-14 days" /></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Features (comma separated)</label>
+                    <input type="text" class="form-input" id="srv-features"
+                        placeholder="SEO Optimized, Responsive Design, 3 Revisions..." />
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js?v=2"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        if (!Auth.isLoggedIn() || !Auth.isAdmin()) window.location.href = '../login.html';
+
+        let services = [];
+
+        async function loadServices() {
+            try {
+                const data = await API('/services');
+                services = data.services || [];
+                const tbody = document.getElementById('services-tbody');
+                if (services.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No services found</td></tr>'; return; }
+                tbody.innerHTML = services.map(s => `
+          <tr>
+            <td><div style="display:flex;align-items:center;gap:12px"><div style="font-size:24px">${s.icon || '<i class="fas fa-globe"></i>'}</div><div><div style="font-weight:700;color:var(--text-primary)">${s.title}</div></div></div></td>
+            <td><span class="badge badge-primary">${s.category}</span></td>
+            <td><span style="font-weight:700">$${s.price}</span></td>
+            <td><span style="color:var(--text-muted)">${s.delivery || 'N/A'}</span></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-outline btn-sm" onclick='editService(${JSON.stringify(s).replace(/'/g, "&apos;")})'><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="deleteService('${s._id}', '${s.title}')"><i class="fas fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+            } catch (e) { document.getElementById('services-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--danger)">Error loading services</td></tr>`; }
+        }
+
+        function openModal() { document.getElementById('service-form').reset(); document.getElementById('srv-id').value = ''; document.getElementById('modal-title').textContent = 'Add New Service'; document.getElementById('service-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('service-modal').style.display = 'none'; }
+
+        function editService(s) {
+            document.getElementById('modal-title').textContent = 'Edit Service';
+            document.getElementById('srv-id').value = s._id;
+            document.getElementById('srv-title').value = s.title;
+            document.getElementById('srv-desc').value = s.description;
+            document.getElementById('srv-price').value = s.price;
+            document.getElementById('srv-cat').value = s.category;
+            document.getElementById('srv-icon').value = s.icon || '';
+            document.getElementById('srv-delivery').value = s.delivery || '';
+            document.getElementById('srv-features').value = (s.features && Array.isArray(s.features)) ? s.features.join(', ') : '';
+            document.getElementById('service-modal').style.display = 'flex';
+        }
+
+        document.getElementById('service-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('srv-id').value;
+            const featuresRaw = document.getElementById('srv-features').value;
+            const features = featuresRaw ? featuresRaw.split(',').map(f => f.trim()) : [];
+
+            const payload = {
+                title: document.getElementById('srv-title').value,
+                description: document.getElementById('srv-desc').value,
+                price: document.getElementById('srv-price').value,
+                category: document.getElementById('srv-cat').value,
+                icon: document.getElementById('srv-icon').value,
+                delivery: document.getElementById('srv-delivery').value,
+                features: features
+            };
+            document.getElementById('save-btn').disabled = true;
+            try {
+                if (id) await API(`/services/${id}`, 'PUT', payload);
+                else await API('/services', 'POST', payload);
+                showToast(`Service ${id ? 'updated' : 'created'} successfully!`, 'success');
+                closeModal(); loadServices();
+            } catch (err) { showToast(err.message, 'error'); }
+            document.getElementById('save-btn').disabled = false;
+        });
+
+        async function deleteService(id, name) {
+            if (!confirm(`Delete service "${name}"?`)) return;
+            try {
+                await API(`/services/${id}`, 'DELETE');
+                showToast('Service deleted', 'info'); loadServices();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        loadServices();
+    </script>
+</body>
+
+</html>

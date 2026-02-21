@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — Binary Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .auth-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(123, 47, 255, 0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .auth-footer-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .auth-footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .input-with-icon .form-input {
+            padding-left: 40px;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+            padding: 14px;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 6px;
+            transition: var(--transition);
+        }
+
+        @media(max-width:560px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo"><img src="images/logo.png" alt="Binary Craft Logo"
+                    style="height: 40px; margin-right: 12px;" /></a>
+            <div style="display:flex;gap:12px;align-items:center">
+                <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-box animate-fadeInUp">
+            <div style="text-align:center;margin-bottom:28px">
+                <div
+                    style="width:60px;height:60px;background:var(--grad-primary);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;box-shadow:var(--shadow-glow)">
+                    BC</div>
+            </div>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join Binary Craft and start your digital journey</p>
+
+            <div id="alert-area"></div>
+
+            <form id="register-form" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" class="form-input" id="name" placeholder="John Doe" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone (optional)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" class="form-input" id="phone" placeholder="+880..." />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-input" id="email" placeholder="your@email.com" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" id="password" placeholder="Min 6 characters" required
+                            onkeyup="checkStrength(this.value)" />
+                    </div>
+                    <div class="password-strength" id="pwd-strength"></div>
+                    <div id="pwd-strength-label" style="font-size:11px;margin-top:4px;color:var(--text-muted)"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" id="confirm-password" placeholder="Repeat password"
+                            required />
+                    </div>
+                </div>
+                <div
+                    style="display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;font-size:13px;color:var(--text-secondary)">
+                    <input type="checkbox" id="agree" style="margin-top:3px;cursor:pointer" required />
+                    <label for="agree">I agree to the <a href="#" style="color:var(--primary)">Terms of Service</a> and
+                        <a href="#" style="color:var(--primary)">Privacy Policy</a></label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="register-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            <p class="auth-footer-text">Already have an account? <a href="login.html">Sign in →</a></p>
+        </div>
+    </div>
+
+    <script src="js/api.js?v=2"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (Auth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+        function checkStrength(pwd) {
+            const bar = document.getElementById('pwd-strength');
+            const label = document.getElementById('pwd-strength-label');
+            if (!pwd) { bar.style.width = '0'; bar.style.background = ''; label.textContent = ''; return; }
+            let score = 0;
+            if (pwd.length >= 6) score++;
+            if (pwd.length >= 10) score++;
+            if (/[A-Z]/.test(pwd)) score++;
+            if (/[0-9]/.test(pwd)) score++;
+            if (/[^A-Za-z0-9]/.test(pwd)) score++;
+            const levels = [
+                { color: 'var(--danger)', label: 'Too weak', w: '20%' },
+                { color: 'var(--warning)', label: 'Weak', w: '40%' },
+                { color: 'var(--warning)', label: 'Fair', w: '60%' },
+                { color: 'var(--success)', label: 'Strong', w: '80%' },
+                { color: 'var(--success)', label: 'Very strong', w: '100%' }
+            ];
+            const l = levels[Math.min(score - 1, 4)];
+            bar.style.background = l.color;
+            bar.style.width = l.w;
+            label.textContent = l.label;
+            label.style.color = l.color;
+        }
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+            const agree = document.getElementById('agree').checked;
+            const alert = document.getElementById('alert-area');
+            const btn = document.getElementById('register-btn');
+            alert.innerHTML = '';
+
+            if (!name || !email || !password) { alert.innerHTML = '<div class="alert alert-danger">Please fill in all required fields</div>'; return; }
+            if (password !== confirm) { alert.innerHTML = '<div class="alert alert-danger">Passwords do not match</div>'; return; }
+            if (password.length < 6) { alert.innerHTML = '<div class="alert alert-danger">Password must be at least 6 characters</div>'; return; }
+            if (!agree) { alert.innerHTML = '<div class="alert alert-warning">Please agree to Terms & Privacy Policy</div>'; return; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            try {
+                const data = await API('/auth/register', 'POST', { name, email, password, phone });
+                Auth.setSession(data.token, data.user);
+                showToast('Account created successfully! Welcome 🎉', 'success');
+                setTimeout(() => window.location.href = 'dashboard.html', 1200);
+            } catch (err) {
+                alert.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            }
+        });
+    </script>
+</body>
+
+</html>

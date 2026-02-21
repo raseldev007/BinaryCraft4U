@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages — Admin Panel Binary Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <style>
+        body {
+            background: var(--bg-primary);
+        }
+
+        .admin-layout { display: block;
+            
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 260px;
+            
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--grad-primary);
+            border-radius: 10px;
+            
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .admin-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 8px 10px;
+            margin-top: 8px;
+        }
+
+        .sidebar-link {
+            
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            margin-bottom: 2px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-glow);
+            color: var(--primary);
+        }
+
+        .sidebar-link i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .admin-main {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .messages-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            height: calc(100vh - 120px);
+        }
+
+        .messages-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow-y: auto;
+            
+            flex-direction: column;
+        }
+
+        .msg-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .msg-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .msg-item.active {
+            background: var(--primary-glow);
+            border-left: 3px solid var(--primary);
+        }
+
+        .msg-item.unread .msg-subj {
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .msg-meta {
+            
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .msg-subj {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .msg-preview {
+            font-size: 13px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-view {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            
+            flex-direction: column;
+        }
+
+        .view-empty {
+            flex: 1;
+            
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            flex-direction: column;
+            gap: 16px;
+            font-size: 16px;
+        }
+
+        .view-header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .view-subject {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .view-sender {
+            
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sender-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .view-body {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 15px;
+            white-space: pre-wrap;
+            flex: 1;
+        }
+
+        .reply-box {
+            margin-top: 24px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><img src="../images/logo.png" alt="Binary Craft Logo" style="height: 36px; margin-right: 12px;" /><div><div style="font-weight:800;font-size:15px;color:var(--text-white)">Binary Craft</div><span class="admin-badge">ADMIN</span></div></a></div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Dashboard</div>
+                <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <div class="sidebar-section">Management</div>
+                <a href="users.html" class="sidebar-link"><i class="fas fa-users"></i> Users</a>
+                <a href="orders.html" class="sidebar-link"><i class="fas fa-shopping-bag"></i> Orders</a>
+                <a href="products.html" class="sidebar-link"><i class="fas fa-box"></i> Products</a>
+                <a href="services.html" class="sidebar-link"><i class="fas fa-cogs"></i> Services</a>
+                <a href="messages.html" class="sidebar-link active"><i class="fas fa-envelope"></i> Messages</a>
+                <div class="sidebar-section">Website</div>
+                <a href="../index.html" class="sidebar-link"><i class="fas fa-globe"></i> View Website</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-header">
+                <div>
+                    <h1>✉️ Messages Inbox</h1>
+                    <p style="color:var(--text-muted);font-size:14px">Customer inquiries and contact form submissions
+                    </p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="loadMessages()"><i class="fas fa-sync"></i>
+                    Refresh</button>
+            </div>
+
+            <div class="messages-layout">
+                <!-- List Pane -->
+                <div class="messages-list" id="msg-list">
+                    <div style="padding:40px;text-align:center">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <!-- View Pane -->
+                <div class="message-view" id="msg-view">
+                    <div class="view-empty">
+                        <i class="fas fa-envelope-open" style="font-size:48px;opacity:0.2"></i>
+                        Select a message to view
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js?v=2"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        if (!Auth.isLoggedIn() || !Auth.isAdmin()) window.location.href = '../login.html';
+
+        let messages = [];
+        let currentMsgId = null;
+
+        async function loadMessages() {
+            try {
+                const data = await API('/contact');
+                messages = data.messages || [];
+                renderList();
+            } catch (e) { document.getElementById('msg-list').innerHTML = `<div style="padding:20px;color:var(--danger)">Error loading messages</div>`; }
+        }
+
+        function renderList() {
+            const listEl = document.getElementById('msg-list');
+            if (messages.length === 0) { listEl.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted)">Inbox is empty</div>'; return; }
+
+            listEl.innerHTML = messages.map(m => `
+        <div class="msg-item ${!m.isRead ? 'unread' : ''} ${m._id === currentMsgId ? 'active' : ''}" onclick="viewMessage('${m._id}')">
+          <div class="msg-meta"><span>${m.name}</span><span>${new Date(m.createdAt).toLocaleDateString()}</span></div>
+          <div class="msg-subj">${!m.isRead ? '<span style="color:var(--primary)">●</span> ' : ''}${m.subject}</div>
+          <div class="msg-preview">${m.message}</div>
+        </div>
+      `).join('');
+        }
+
+        async function viewMessage(id) {
+            currentMsgId = id;
+            const m = messages.find(x => x._id === id);
+            if (!m) return;
+
+            renderList(); // update active state
+
+            document.getElementById('msg-view').innerHTML = `
+        <div class="view-header">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <h2 class="view-subject">${m.subject}</h2>
+            <div style="font-size:12px;color:var(--text-muted)">${new Date(m.createdAt).toLocaleString()}</div>
+          </div>
+          <div class="view-sender">
+            <div class="sender-avatar">${m.name.charAt(0).toUpperCase()}</div>
+            <div>
+              <div style="font-weight:600;color:var(--text-primary)">${m.name}</div>
+              <div style="font-size:12px;color:var(--text-muted)">${m.email}</div>
+            </div>
+          </div>
+        </div>
+        <div class="view-body">${m.message}</div>
+        <div class="reply-box">
+          <a href="mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject)}" class="btn btn-primary"><i class="fas fa-reply"></i> Reply via Mail Client</a>
+        </div>
+      `;
+
+            // Mark as read in background if unread
+            if (!m.isRead) {
+                m.isRead = true;
+                try { await API(`/contact/${id}/read`, 'PUT'); renderList(); } catch (e) { }
+            }
+        }
+
+        loadMessages();
+    </script>
+</body>
+
+</html>

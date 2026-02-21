@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Users — Admin Panel Binary Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <style>
+        body {
+            background: var(--bg-primary);
+        }
+
+        .admin-layout { display: block;
+            
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 260px;
+            
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--grad-primary);
+            border-radius: 10px;
+            
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .admin-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 8px 10px;
+            margin-top: 8px;
+        }
+
+        .sidebar-link {
+            
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            margin-bottom: 2px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-glow);
+            color: var(--primary);
+        }
+
+        .sidebar-link i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-main {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .filters-bar {
+            
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters-bar input {
+            max-width: 280px;
+        }
+
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: var(--bg-card);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        tbody tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        td {
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .action-btns {
+            
+            gap: 6px;
+        }
+
+        .user-avatar-sm {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--grad-primary);
+            
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .user-cell {
+            
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media(max-width:900px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .admin-main {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><img src="../images/logo.png" alt="Binary Craft Logo" style="height: 36px; margin-right: 12px;" /><div><div style="font-weight:800;font-size:15px;color:var(--text-white)">Binary Craft</div><span class="admin-badge">ADMIN</span></div></a></div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Dashboard</div>
+                <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <div class="sidebar-section">Management</div>
+                <a href="users.html" class="sidebar-link active"><i class="fas fa-users"></i> Users</a>
+                <a href="orders.html" class="sidebar-link"><i class="fas fa-shopping-bag"></i> Orders</a>
+                <a href="products.html" class="sidebar-link"><i class="fas fa-box"></i> Products</a>
+                <a href="services.html" class="sidebar-link"><i class="fas fa-cogs"></i> Services</a>
+                <a href="messages.html" class="sidebar-link"><i class="fas fa-envelope"></i> Messages</a>
+                <div class="sidebar-section">Website</div>
+                <a href="../index.html" class="sidebar-link"><i class="fas fa-globe"></i> View Website</a>
+            </nav>
+            <div class="sidebar-footer"><button class="btn btn-danger btn-sm" style="width:100%;justify-content:center"
+                    onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="page-header">
+                <div>
+                    <h1>👥 User Management</h1>
+                    <p style="color:var(--text-muted);font-size:14px">View, block, and manage all registered users</p>
+                </div>
+            </div>
+            <div class="filters-bar">
+                <input type="text" class="form-input" id="search-users" placeholder="🔍 Search by name or email..."
+                    oninput="searchUsers(this.value)" />
+                <select class="form-input" style="width:160px" id="filter-status" onchange="filterUsers()">
+                    <option value="">All Users</option>
+                    <option value="active">Active</option>
+                    <option value="blocked">Blocked</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="loadUsers()"><i class="fas fa-sync"></i>
+                    Refresh</button>
+            </div>
+            <div id="users-count" style="font-size:13px;color:var(--text-muted);margin-bottom:12px"></div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">
+                                <div class="spinner"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js?v=2"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        if (!Auth.isLoggedIn() || !Auth.isAdmin()) window.location.href = '../login.html';
+        let allUsers = [];
+
+        async function loadUsers() {
+            try {
+                const data = await API('/admin/users?limit=100');
+                allUsers = data.users || [];
+                document.getElementById('users-count').textContent = `${allUsers.length} users registered`;
+                renderUsers(allUsers);
+            } catch (e) {
+                document.getElementById('users-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--danger)">${e.message}</td></tr>`;
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('users-tbody');
+            if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No users found</td></tr>'; return; }
+            tbody.innerHTML = users.map(u => `
+        <tr>
+          <td><div class="user-cell"><div class="user-avatar-sm">${u.name.charAt(0).toUpperCase()}</div><span style="font-weight:600;color:var(--text-primary)">${u.name}</span></div></td>
+          <td>${u.email}</td>
+          <td>${u.phone || '-'}</td>
+          <td><span class="badge badge-${u.isBlocked ? 'danger' : 'success'}">${u.isBlocked ? 'Blocked' : 'Active'}</span></td>
+          <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+          <td><div class="action-btns">
+            <button class="btn btn-sm ${u.isBlocked ? 'btn-success' : 'btn-danger'}" onclick="toggleBlock('${u._id}','${u.name}',${u.isBlocked})">
+              <i class="fas fa-${u.isBlocked ? 'unlock' : 'ban'}"></i> ${u.isBlocked ? 'Unblock' : 'Block'}
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUser('${u._id}','${u.name}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div></td>
+        </tr>
+      `).join('');
+        }
+
+        async function toggleBlock(id, name, isBlocked) {
+            if (!confirm(`${isBlocked ? 'Unblock' : 'Block'} user "${name}"?`)) return;
+            try {
+                await API(`/admin/users/${id}/toggle-block`, 'PUT');
+                showToast(`User ${isBlocked ? 'unblocked' : 'blocked'} successfully`, 'success');
+                loadUsers();
+            } catch (e) { showToast(e.message, 'error'); }
+        }
+
+        async function deleteUser(id, name) {
+            if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+            try {
+                await API(`/admin/users/${id}`, 'DELETE');
+                showToast('User deleted', 'info');
+                loadUsers();
+            } catch (e) { showToast(e.message, 'error'); }
+        }
+
+        function searchUsers(q) {
+            const filtered = allUsers.filter(u => u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase()));
+            renderUsers(filtered);
+        }
+
+        function filterUsers() {
+            const status = document.getElementById('filter-status').value;
+            const filtered = status === 'blocked' ? allUsers.filter(u => u.isBlocked) : status === 'active' ? allUsers.filter(u => !u.isBlocked) : allUsers;
+            renderUsers(filtered);
+        }
+
+        loadUsers();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmation — Binary Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <style>
+        body {
+            background: var(--bg-primary);
+            font-family: var(--font-primary);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Abstract background glow */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .confirm-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 540px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-animation {
+            width: 100px;
+            height: 100px;
+            border-radius: 30px;
+            background: var(--grad-primary);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-glow);
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                rotate: -45deg;
+            }
+
+            70% {
+                transform: scale(1.1);
+                rotate: 5deg;
+            }
+
+            100% {
+                transform: scale(1);
+                rotate: 0;
+            }
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .order-info {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .order-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .order-id {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+        }
+
+        .actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .actions a {
+            flex: 1;
+            padding: 16px;
+            font-weight: 700;
+            justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .confirm-card {
+                padding: 40px 24px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="confirm-card">
+        <div class="success-animation"><i class="fas fa-check"></i></div>
+        <h1>Order Confirmed!</h1>
+        <p>Your premium service order has been successfully placed. Check your email for full details and next steps
+            from our team.</p>
+
+        <div class="order-info">
+            <div class="order-label">Order Reference ID</div>
+            <div class="order-id" id="order-ref">#ORD-XXXXXX</div>
+        </div>
+
+        <div class="actions">
+            <a href="order-history.html" class="btn btn-outline" style="border-color: rgba(255,255,255,0.1)">View
+                Orders</a>
+            <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        if (!Auth.isLoggedIn()) window.location.href = 'index.html';
+
+        // Retrieve order ID from URL or generate a mock one
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id') || Math.random().toString(36).substr(2, 8).toUpperCase();
+        document.getElementById('order-ref').textContent = '#' + (id.startsWith('ORD-') ? id : 'ORD-' + id);
+
+        // Reset cart local storage
+        localStorage.removeItem('bc_cart_local');
+        localStorage.removeItem('bc_cart_count');
+    </script>
+</body>
+
+</html>
